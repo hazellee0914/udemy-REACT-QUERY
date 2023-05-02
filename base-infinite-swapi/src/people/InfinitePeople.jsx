@@ -11,6 +11,27 @@ const fetchUrl = async (url) => {
 export function InfinitePeople() {
   // TODO: get data for InfiniteScroll via React Query
 
-  const { data, fetchNextPage } = useInfiniteQuery();
-  return <InfiniteScroll />;
+  const { data, fetchNextPage, hasNextPage } = useInfiniteQuery(
+    'sw-people',
+    ({ pageParam = initialUrl }) => fetchUrl(pageParam),
+    {
+      getNextPageParam: (lastPage) => lastPage.next || undefined,
+    }
+  );
+  return (
+    <InfiniteScroll loadMore={fetchNextPage} hasMore={hasNextPage}>
+      {data.pages.map((pageData) => {
+        return pageData.results.map((person) => {
+          return (
+            <Person
+              key={person.name}
+              name={person.name}
+              hairColor={person.hair_color}
+              eyeColor={person.eye_color}
+            />
+          );
+        });
+      })}
+    </InfiniteScroll>
+  );
 }
