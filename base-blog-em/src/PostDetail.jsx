@@ -32,6 +32,7 @@ export function PostDetail({ post }) {
 
   // ussMutation에서는 객체는 변이 함수를 반환
   const deleteMutation = useMutation((postId) => deletePost(postId));
+  const updateMutation = useMutation((postId) => updatePost(postId));
 
   if (isLoading) {
     return <h3>Loading....</h3>;
