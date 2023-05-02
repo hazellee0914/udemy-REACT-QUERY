@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 
 import type { Treatment } from '../../../../../shared/types';
 import { axiosInstance } from '../../../axiosInstance';
@@ -19,4 +19,9 @@ export function useTreatments(): Treatment[] {
   const fallback = [];
   const { data } = useQuery(queryKeys.treatments, getTreatments);
   return data;
+}
+
+// 캐쉬를 채우는 목적이므로 아무것도 반환하지 않다도 됨
+export function usePrefetchTreatments(): void {
+  const useQueryClient = userQueryClient();
 }
