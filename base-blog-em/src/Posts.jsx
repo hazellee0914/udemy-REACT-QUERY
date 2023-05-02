@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useQuery } from 'react-query';
+import { useEffect, useState } from 'react';
+import { useQuery, useQueryClient } from 'react-query';
 
 import { PostDetail } from './PostDetail';
 const maxPostPage = 10;
@@ -15,6 +15,19 @@ export function Posts() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedPost, setSelectedPost] = useState(null);
 
+  const queryClient = useQueryClient();
+
+  // queryClient 의존성
+  useEffect(() => {
+    // 9 page 이전이라면 프리페칭이 이루어지지만 10페이지면 가져올 데이터가 없다.
+    if (currentPage < maxPostPage) {
+      const nextPage = currentPage + 1;
+      queryClient.prefetchQuery(['posts', nextPage], () =>
+        fetchPosts(nextPage)
+      );
+    }
+  }, [currentPage, queryClient]);
+
   // replace with useQuery
   // const data = [];
   const { data, isError, isLoading } = useQuery(
@@ -23,6 +36,7 @@ export function Posts() {
     () => fetchPosts(currentPage),
     {
       staleTime: 2000,
+      keepPreviousData: true,
     }
   );
   // fetchposts 가 해결될때까지 데이터는 거짓이되고, 해결되면 데이터에 배열이 포함 => 컴포넌트가 다시 렌더링되어 매핑!!
