@@ -17,9 +17,10 @@ export function Posts() {
 
   // replace with useQuery
   // const data = [];
-  const { data } = useQuery('posts', fetchPosts);
-  // fetchposts 가 해결될때까지 데이터는 거짓이된다.
-  if (!data) return <div />;
+  const { data, isError, isLoading } = useQuery('posts', fetchPosts);
+  // fetchposts 가 해결될때까지 데이터는 거짓이되고, 해결되면 데이터에 배열이 포함 => 컴포넌트가 다시 렌더링되어 매핑!!
+  if (isLoading) return <h3>Loading...</h3>;
+  if (isError) return <h3>Oops, something went wrong</h3>;
 
   return (
     <>
