@@ -30,7 +30,7 @@ export function Posts() {
 
   // replace with useQuery
   // const data = [];
-  const { data, isError, isLoading } = useQuery(
+  const { data, isError, isLoading, error } = useQuery(
     // query key 가 바뀌면 useQuery 에 새로운 쿼리로 알려주고 데이터를 다시 가져옴.
     ['posts', currentPage],
     () => fetchPosts(currentPage),
@@ -41,7 +41,13 @@ export function Posts() {
   );
   // fetchposts 가 해결될때까지 데이터는 거짓이되고, 해결되면 데이터에 배열이 포함 => 컴포넌트가 다시 렌더링되어 매핑!!
   if (isLoading) return <h3>Loading...</h3>;
-  if (isError) return <h3>Oops, something went wrong</h3>;
+  if (isError)
+    return (
+      <>
+        <h3>Oops, something went wrong</h3>
+        <p>{error.toString()}</p>
+      </>
+    );
 
   return (
     <>
