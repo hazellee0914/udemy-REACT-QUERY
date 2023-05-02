@@ -23,5 +23,6 @@ export function useTreatments(): Treatment[] {
 
 // 캐쉬를 채우는 목적이므로 아무것도 반환하지 않다도 됨
 export function usePrefetchTreatments(): void {
-  const useQueryClient = userQueryClient();
+  const queryClient = useQueryClient();
+  queryClient.prefetchQuery(queryKeys.treatments, getTreatments);
 }
