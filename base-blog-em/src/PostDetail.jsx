@@ -61,7 +61,9 @@ export function PostDetail({ post }) {
         <p style={{ color: 'green' }}>Post has (not) been deleted</p>
       )}
 
-      <button>Update title</button>
+      <button onClick={() => updateMutation.mutate(post.id)}>
+        Update title
+      </button>
       <p>{post.body}</p>
       <h4>Comments</h4>
       {data.map((comment) => (
