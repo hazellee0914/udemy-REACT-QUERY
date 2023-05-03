@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { UseMutateFunction, useMutation } from 'react-query';
+import { UseMutateFunction, useMutation, useQueryClient } from 'react-query';
 
 import { Appointment } from '../../../../../shared/types';
 import { axiosInstance } from '../../../axiosInstance';
@@ -32,6 +32,7 @@ export function useReserveAppointment(): UseMutateFunction<
 > {
   const { user } = useUser();
   const toast = useCustomToast();
+  const queryClient = useQueryClient();
 
   // TODO: replace with mutate function
   //   return (appointment: Appointment) => {
@@ -39,8 +40,19 @@ export function useReserveAppointment(): UseMutateFunction<
   //   };
   // }
 
-  const { mutate } = useMutation((appintment: Appointment) =>
-    setAppointmentUser(appintment, user?.id),
+  const { mutate } = useMutation(
+    (appintment: Appointment) => setAppointmentUser(appintment, user?.id),
+    // 쿼리 무효화
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([queryKeys.appointments]);
+        // 사용자 피드백 주기
+        toast({
+          title: 'You have reserved the appointment!',
+          status: 'success',
+        });
+      },
+    },
   );
 
   return mutate;
